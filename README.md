@@ -2,7 +2,9 @@
 
 A terminal-first Herdr layout for supervising root orchestrators as an attention queue.
 
-![Herdr Orchestrator Inbox](preview.png)
+![Herdr Orchestrator Inbox showing every root queue state with synthetic demo data](preview.png)
+
+> All screenshots use synthetic names, paths, tasks, and terminal output. They demonstrate product states without exposing a real Herdr workspace.
 
 The Inbox answers two questions quickly: **why does this need me?** and **how do I clear it?** Root orchestrators appear under Needs you, Ready to review, Working, or Idle. Managed children stay nested beneath their root instead of becoming peer queue items.
 
@@ -18,9 +20,19 @@ The Inbox answers two questions quickly: **why does this need me?** and **how do
 - `⌘⇧J` / `⌘⇧K` cycle only actionable Inbox roots
 - Compact rail when the Herdr sidebar is collapsed
 
-<picture>
-  <img alt="Orchestrator Inbox sidebar" src="screenshots/inbox-sidebar.png" width="350">
-</picture>
+## State gallery
+
+| Explicit triage | Managed children |
+|---|---|
+| [![A Needs you row with acknowledge and snooze actions](screenshots/triage-actions.png)](screenshots/triage-actions.png) | [![A root orchestrator with working, blocked, finished, and idle children](screenshots/managed-children.png)](screenshots/managed-children.png) |
+| **Acknowledge, snooze, or open without handling.** | **Children stay nested while their live state informs the root.** |
+
+| Retained review | Agents tree |
+|---|---|
+| [![A read-only retained session transcript](screenshots/retained-transcript.png)](screenshots/retained-transcript.png) | [![The all-agent tree with synthetic roots and descendants](screenshots/agents-view.png)](screenshots/agents-view.png) |
+| **Finished sessions open in a bounded, read-only transcript.** | **Toggle to every managed agent without changing the terminal workspace.** |
+
+The main preview demonstrates Needs you, Ready to review, Working, and Idle together. The gallery adds every child state, explicit handling actions, retained-session review, and the all-agent tree.
 
 ## Requirements
 
@@ -113,6 +125,14 @@ The uninstaller backs up the affected files, removes only this package's layout/
 ```bash
 ./scripts/test.sh
 ```
+
+The screenshot source is `art/demo.html`. Regenerate the fully synthetic gallery with:
+
+```bash
+./scripts/capture-screenshots.sh
+```
+
+This requires `agent-browser`; it never reads your Herdr configuration or sessions.
 
 See [Getting started](docs/getting-started.md), [RECIPE.md](RECIPE.md) for the behavioral specification, and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 
