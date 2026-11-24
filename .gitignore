@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+node_modules/
+mods/*/gpui-kit.d.ts
+mods/*/jsconfig.json

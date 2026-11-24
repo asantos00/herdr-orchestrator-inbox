@@ -1,0 +1,12 @@
+{
+  "name": "herdr-orchestrator-inbox",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A terminal-first Herdr layout for supervising root orchestrators as an attention queue.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "./scripts/test.sh",
+    "test:unit": "node --test mods/orchestrator-inbox/*.test.mjs",
+    "test:install": "./scripts/test-install.sh"
+  }
+}
