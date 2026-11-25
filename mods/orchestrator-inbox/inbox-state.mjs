@@ -77,6 +77,10 @@ export function descendantsNeedAttention(descendants = []) {
   );
 }
 
+export function isInboxTerminalVisible(terminal) {
+  return terminal?.state !== "finished" || terminal.reason !== "killed";
+}
+
 export function triageState(root, descendants = [], now = Date.now()) {
   const state = parseInboxState(root.labels);
   const fingerprint = activityFingerprint(root, descendants);
