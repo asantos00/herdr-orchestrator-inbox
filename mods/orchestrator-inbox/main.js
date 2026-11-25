@@ -8,6 +8,7 @@ import {
   ACK_TIMEOUT_MS,
   INBOX_LABEL,
   descendantsNeedAttention,
+  isInboxTerminalVisible,
   parseInboxState,
   recordAction,
   serializeInboxState,
@@ -1012,7 +1013,8 @@ export default class LocalInbox extends View {
     const machineList = machines();
     const unavailable = machineList.filter((machine) => machine.layout === "unavailable");
     const liveTerminals = terminals();
-    const allTerminals = mergedTerminals(liveTerminals, this.retained);
+    const retainedTerminals = this.retained.filter(isInboxTerminalVisible);
+    const allTerminals = mergedTerminals(liveTerminals, retainedTerminals);
     const terminalByAddress = new Map(allTerminals.map((terminal) => [terminal.address, terminal]));
     const liveAgents = [...agents()]
       .map((agent) => {
@@ -1026,7 +1028,7 @@ export default class LocalInbox extends View {
         .filter((agent) => rootAgentAddress(agent.address, terminalByAddress) === agent.address)
         .map((agent) => [agent.address, agent]),
     );
-    for (const terminal of this.retained) {
+    for (const terminal of retainedTerminals) {
       if (terminal.state === "finished" && terminal.labels?.[INBOX_LABEL] && !roots.has(terminal.address)) {
         roots.set(terminal.address, retainedAgent(terminal));
       }

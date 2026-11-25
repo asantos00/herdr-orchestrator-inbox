@@ -5,6 +5,7 @@ import {
   INBOX_LABEL,
   activityFingerprint,
   descendantsNeedAttention,
+  isInboxTerminalVisible,
   parseInboxState,
   recordAction,
   serializeInboxState,
@@ -30,6 +31,13 @@ test("only live blocked descendants make a root need attention", () => {
   assert.equal(descendantsNeedAttention([{ state: "live", status: "blocked" }]), true);
   assert.equal(descendantsNeedAttention([{ state: "live", status: "error" }]), true);
   assert.equal(descendantsNeedAttention([{ state: "finished", status: null, exit_code: 1 }]), false);
+});
+
+test("hides sessions explicitly closed by the user from Inbox history", () => {
+  assert.equal(isInboxTerminalVisible({ state: "finished", reason: "killed" }), false);
+  assert.equal(isInboxTerminalVisible({ state: "finished", reason: "exited" }), true);
+  assert.equal(isInboxTerminalVisible({ state: "finished", reason: null }), true);
+  assert.equal(isInboxTerminalVisible({ state: "live", reason: null }), true);
 });
 
 test("blocked and unreviewed completed roots need handling", () => {
