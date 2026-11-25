@@ -28,7 +28,7 @@ Below 160px sidebar width, the Inbox becomes a compact icon rail. The normal ter
 - Historical failed children do not keep a working root actionable.
 - Clicking a live root focuses its real agent terminal.
 - Clicking a child focuses its existing pane or peeks at a live headless terminal.
-- Clicking a finished retained root or child opens a selectable, read-only transcript dialog backed by `hc read`.
+- Clicking a finished retained root or child opens a selectable, read-only dialog backed by `hc read`. It shows the final agent result first and offers the full transcript on demand.
 - Opening and navigation never acknowledge, snooze, review, or clear work.
 - Acknowledge lasts one hour while the activity fingerprint is unchanged.
 - Snooze lasts five minutes or one hour while the fingerprint is unchanged.
@@ -66,7 +66,7 @@ The SVG icons are copied from Herdr's Apache-2.0 workspace-chrome mod and are at
 - `hc ls --all --json` summaries omit labels, so changed retained roots need `hc get --json` enrichment.
 - Retained history is cached; fetch details only for new or changed roots instead of fanning out on every action.
 - Root triage must ignore finished child failures while still reacting to live blocked/error descendants.
-- Native `terminal.peek` supports running terminals only. Finished sessions require the Inbox-owned transcript dialog.
+- Native `terminal.peek` supports running terminals only. Finished sessions require the Inbox-owned transcript dialog. Raw history can contain source code and tool chatter, so the dialog extracts the last post-`Thinking...` result and falls back to a bounded 60-line tail.
 - The queue unit is always the root. Descendants contribute status/activity and navigation context but never become peer items.
 - `herdr.inbox` history is bounded to 64 events.
 - The layout assumes the shipped `agents`, `spaces`, `tabs`, `pane`, `files`, `changes`, and `workspace-status` mods exist.
@@ -82,6 +82,6 @@ The SVG icons are copied from Herdr's Apache-2.0 workspace-chrome mod and are at
 - The installer refuses shortcut conflicts, creates a backup, and passes in an isolated Herdr home.
 - Needs you, Ready to review, Working, and Idle classify roots as described.
 - Finished failed children do not escalate a working root.
-- Clicking a finished retained item opens readable retained output.
+- Clicking a finished retained item opens its final result without preceding tool output, and the full retained transcript remains available.
 - Inbox/Agents toggle and `⌘⇧J/K` preserve the focused terminal and never change triage state.
 - The compact rail renders below 160px without changing the remembered expanded width.

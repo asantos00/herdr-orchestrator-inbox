@@ -15,6 +15,7 @@ import {
 } from "./inbox-state.mjs";
 import { actionableAddresses, childNavigation, rootNavigation } from "./inbox-navigation.mjs";
 import { actionMessage, labelsWithOptimisticState } from "./inbox-optimistic.mjs";
+import { retainedTranscript } from "./retained-transcript.mjs";
 
 const ASSET = "mods/orchestrator-inbox";
 const SECTIONS = [
@@ -97,19 +98,6 @@ function cleanTitle(value) {
     .replace(/^[^\p{L}\p{N}\p{Ps}\p{Pi}]+/u, "")
     .replace(/^\[ [!.] \] /, "")
     .trim();
-}
-
-function retainedTranscript(value) {
-  return (value ?? "")
-    .replace(/\x1b\][^\x07]*(?:\x07|\x1b\\)/g, "")
-    .replace(/\x1b\[[0-?]*[ -\/]*[@-~]/g, "")
-    .replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, "")
-    .split("\n")
-    .slice(-300)
-    .join("\n")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
 }
 
 function latestActivity(value) {
@@ -215,6 +203,7 @@ export default class LocalInbox extends View {
     this.listedAddresses = new Set();
     this.retainedOutput = null;
     this.retainedError = null;
+    this.showFullRetained = false;
     try {
       this.folded = new Set(JSON.parse(localStorage.getItem("folded") ?? '["working","idle"]'));
       this.subagentsFolded = JSON.parse(localStorage.getItem("inbox.subagents-folded") ?? "true");
@@ -936,11 +925,16 @@ export default class LocalInbox extends View {
   retainedDialog(t) {
     const address = props().retained;
     const title = props().retainedTitle || address;
+    const output = this.retainedOutput;
+    const showingFull = this.showFullRetained && output?.full !== output?.review;
     const body = this.retainedError
       ? div().p(16).text_size(12).text_color(t.blocked).child(this.retainedError)
-      : this.retainedOutput === null
+      : output === null
         ? div().p(16).text_size(12).text_color(t.dim).child("Reading retained terminal…")
-        : TextView.html(`retained-output-${address}`, `<pre>${this.retainedOutput || "No retained output."}</pre>`)
+        : TextView.html(
+            `retained-output-${address}-${showingFull ? "full" : "result"}`,
+            `<pre>${(showingFull ? output.fullHtml : output.reviewHtml) || "No retained output."}</pre>`,
+          )
             .selectable(true)
             .scrollable(true);
 
@@ -964,7 +958,33 @@ export default class LocalInbox extends View {
               .flex_1()
               .min_w(0)
               .child(div().truncate().text_size(12).font_semibold().text_color(t.foreground).child(title))
-              .child(div().text_size(9.5).text_color(t.dim).child(`Retained session · ${address}`)),
+              .child(
+                div()
+                  .text_size(9.5)
+                  .text_color(t.dim)
+                  .child(`${showingFull ? "Full transcript" : "Final result"} · Retained session · ${address}`),
+              ),
+          )
+          .when(output && output.full !== output.review, (el) =>
+            el.child(
+              div()
+                .id("toggle-retained-transcript")
+                .h(26)
+                .px(9)
+                .rounded(6)
+                .flex()
+                .items_center()
+                .text_size(10.5)
+                .font_semibold()
+                .text_color(t.muted)
+                .cursor_pointer()
+                .hover((button) => button.bg(t.hover).text_color(t.foreground))
+                .on_click((_event, cx) => {
+                  this.showFullRetained = !showingFull;
+                  cx.notify();
+                })
+                .child(showingFull ? "Show final result" : "Show full transcript"),
+            ),
           )
           .child(
             div()

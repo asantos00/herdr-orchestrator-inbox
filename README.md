@@ -14,7 +14,7 @@ The Inbox answers two questions quickly: **why does this need me?** and **how do
 - Explicit acknowledge, 5-minute snooze, 1-hour snooze, and review state
 - Immediate optimistic feedback backed by native `herdr.inbox` labels
 - Activity wakes acknowledged or snoozed work early
-- Finished sessions remain reviewable through a read-only retained transcript
+- Finished sessions show their final result first, with the full read-only transcript available on demand
 - Terminal stays the primary workspace
 - `⌘⇧I` toggles Inbox and Agents
 - `⌘⇧J` / `⌘⇧K` cycle only actionable Inbox roots
@@ -30,7 +30,7 @@ The Inbox answers two questions quickly: **why does this need me?** and **how do
 | Retained review | Agents tree |
 |---|---|
 | [![A read-only retained session transcript](screenshots/retained-transcript.png)](screenshots/retained-transcript.png) | [![The all-agent tree with synthetic roots and descendants](screenshots/agents-view.png)](screenshots/agents-view.png) |
-| **Finished sessions open in a bounded, read-only transcript.** | **Toggle to every managed agent without changing the terminal workspace.** |
+| **Finished sessions open on the final result, with the full transcript one click away.** | **Toggle to every managed agent without changing the terminal workspace.** |
 
 The main preview demonstrates Needs you, Ready to review, Working, and Idle together. The gallery adds every child state, explicit handling actions, retained-session review, and the all-agent tree.
 
